@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,18 +29,21 @@ public class LibroController {
 		this.libroService = libroService;
 	}
 	
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@GetMapping
 	public ResponseEntity<List<Libro>> getLibros() {
 		
 		return ResponseEntity.ok(libroService.getLibros());
 	}
 	
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	@GetMapping("/{id}")
     public ResponseEntity<Libro> getLibroById(@PathVariable("id") Long id) {
 		
         return ResponseEntity.ok(libroService.getLibroById(id));
     }
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
     public ResponseEntity<Libro> saveLibro(@RequestBody Libro libro) {
 		
@@ -48,6 +52,7 @@ public class LibroController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedLibro);
     }
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}")
     public ResponseEntity<Libro> updateLibro(@PathVariable("id") Long id, @RequestBody Libro libro) {
 
@@ -57,6 +62,7 @@ public class LibroController {
         return ResponseEntity.ok(updatedLibro);
     }
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteLibro(@PathVariable("id") Long id){
 		
